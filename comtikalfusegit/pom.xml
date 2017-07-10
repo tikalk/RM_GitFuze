@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>FuseGit</groupId>
+    <artifactId>com.tikal.fusegit</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.4.RELEASE</version>
+    </parent>
+
+    <properties>
+        <dependency.version>3.0.0</dependency.version>
+        <compiler.version>3.6.1</compiler.version>
+        <default.java.version>1.8</default.java.version>
+        <eclipse.github.version>4.8.0.201706111038-r</eclipse.github.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>egit</id>
+            <name>Eclipse egit</name>
+            <url>https://repo.eclipse.org/content/repositories/egit-releases/</url>
+        </repository>
+    </repositories>
+
+
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.eclipse.mylyn.github/org.eclipse.egit.github.core -->
+            <dependency>
+                <groupId>org.eclipse.mylyn.github</groupId>
+                <artifactId>org.eclipse.egit.github.core</artifactId>
+                <version>4.8.0.201706111038-r</version>
+            </dependency>
+        </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${dependency.version}</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler.version}</version>
+                <configuration>
+                    <source>${default.java.version}</source>
+                    <target>${default.java.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
