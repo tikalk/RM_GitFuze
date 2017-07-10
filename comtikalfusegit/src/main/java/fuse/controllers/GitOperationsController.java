@@ -1,67 +1,67 @@
 package fuse.controllers;
 
-import org.eclipse.egit.github.core.PullRequest;
-import org.eclipse.egit.github.core.PullRequestMarker;
-import org.eclipse.egit.github.core.RepositoryId;
-import org.eclipse.egit.github.core.service.PullRequestService;
+import com.google.gson.Gson;
+import fuse.configuration.RibbonConfig;
+import fuse.dtos.ClientResponseDTO;
+import fuse.dtos.PullRequestDTO;
+import fuse.enums.JenkinsStatus;
+import fuse.messages.JenkinsMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.netflix.ribbon.RibbonClient;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by zeev on 7/10/17.
  */
 @RestController
+@RibbonClient(name = "ribbon-client", configuration = RibbonConfig.class)
 @RequestMapping("fusegit")
 public class GitOperationsController {
 
     private static final Logger logger = LoggerFactory.getLogger(GitOperationsController.class);
 
- /*   @Autowired
-    private GitHubClient gitHubClient;*/
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Autowired
+    private Gson gson;
+
+    private String jenkinsApi = "http://jenkins/api/build";
 
 
-    @RequestMapping(value = "/pull-request", method = RequestMethod.GET)
+    @RequestMapping(value = "/pull-request", method = RequestMethod.POST)
     @ResponseBody
-    public String gitClone() {
-        try {
+    public ClientResponseDTO createPullRequest(@Valid @RequestBody PullRequestDTO pullRequestDTO, @NotNull @RequestHeader String token) {
 
-
-            PullRequestService service = new PullRequestService();
-            service.getClient().setCredentials("pnielab@gmail.com", "pnini007");
-            RepositoryId repo = RepositoryId.createFromUrl("https://github.com/tikalk/RM_GitFuze");
-            PullRequest pullRequest = new PullRequest();
-            pullRequest.setTitle("pull request");
-
-            PullRequestMarker base = new PullRequestMarker();
-            base.setLabel("master");
-            pullRequest.setBase(base);
-
-            PullRequestMarker head = new PullRequestMarker();
-            head.setLabel("dev");
-            pullRequest.setHead(head);
-
-            PullRequest request = service.createPullRequest(repo, pullRequest);
-            request = null;
-            int i = 0;
-
-         /*
-
-            GitHubClient client = new GitHubClient();
-            client.setCredentials("pnielab@gmail.com", "pnini007");
-            client.
-
-            GitHub gitHub = GitHub.connect("pnielab@gmail.com","pnini07");
-            gitHub.
-            GHRepository repository = gitHub.getRepository("https://github.com/tikalk/RM_GitFuze.git");*/
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("token", token);
+        JenkinsMessage body = new JenkinsMessage();
+        body.setGitUrl(pullRequestDTO.getGitUrl());
+        body.setCommand(pullRequestDTO.getCommand());
+        HttpEntity<String> request = new HttpEntity<>(gson.toJson(body), headers);
+        String response = restTemplate.postForObject(jenkinsApi, request, String.class);
+        return new ClientResponseDTO(response, "");
     }
 
 
+    @ExceptionHandler(Exception.class)
+    public ClientResponseDTO handle(Exception e) {
+        return new ClientResponseDTO(JenkinsStatus.FAIL.name(), "unexpected error from jenkins server");
+    }
+
+
+    public String getJenkinsUrl() {
+        String url = this.restTemplate.getForObject("http://jenkins/api/build", String.class);
+        return url;
+    }
 }
