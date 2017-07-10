@@ -44,10 +44,46 @@
                     {
                         "in": "body",
                         "name": "forkData",
-                        "description": "author repo url",
+                        "description": "fork data",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/ForkData"
+                        }
+                    }
+                ],
+                "responses": {
+                   "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "$ref": "#/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "description": "server internal error"
+                    }     
+                }
+            }
+        },
+        "/pullrequest": {
+            "post": {
+                "tags": [
+                    "git"
+                ],
+                "summary": "Pull request",
+                "description": "Invoke pull request job in jenkins",
+                "operationId": "pullRequest",
+                "produces": [
+                    "application/xml",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "pullRequestData",
+                        "description": "pull request data",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/PullRequestData"
                         }
                     }
                 ],
@@ -93,6 +129,17 @@
                     "type": "string"
                 },
                 "student_repo_url": {
+                    "type": "string"
+                }
+            },
+        },
+        "PullRequestData": {
+            "type": "object",
+            "properties": {
+                "student_repo_url": {
+                    "type": "string"
+                },
+                "command": {
                     "type": "string"
                 }
             },
