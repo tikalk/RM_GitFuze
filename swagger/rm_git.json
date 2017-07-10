@@ -1,0 +1,152 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Road Mapper GIT",
+        "version": "1.0.0",
+        "title": "Road Mapper - GIT",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "email": "admin@tikalk.com"
+        },
+        "license": {
+            "name": "Tikal Knowledge",
+            "url": "http://www.tikalk.com"
+        }
+    },
+    "host": "tikalk.com",
+    "basePath": "/v2/git",
+    "tags": [
+        {
+            "name": "git",
+            "description": "git operations"
+        }
+    ],
+    "schemes": [
+        "http"
+    ],
+    "security": [
+      "APIKeyHeader": []  
+    ],
+    "paths": {
+        "/fork": {
+            "post": {
+                "tags": [
+                    "git"
+                ],
+                "summary": "Fork git repo",
+                "description": "Fork a git repository",
+                "operationId": "forkRepo",
+                "produces": [
+                    "application/xml",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "forkData",
+                        "description": "fork data",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ForkData"
+                        }
+                    }
+                ],
+                "responses": {
+                   "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "$ref": "#/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "description": "server internal error"
+                    }     
+                }
+            }
+        },
+        "/pullrequest": {
+            "post": {
+                "tags": [
+                    "git"
+                ],
+                "summary": "Pull request",
+                "description": "Invoke pull request job in jenkins",
+                "operationId": "pullRequest",
+                "produces": [
+                    "application/xml",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "pullRequestData",
+                        "description": "pull request data",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/PullRequestData"
+                        }
+                    }
+                ],
+                "responses": {
+                   "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "$ref": "#/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "description": "server internal error"
+                    }     
+                }
+            }
+        },
+            
+    },
+    "responses": {
+        "UnauthorizedError": {
+            "description": "API key is missing or invalid",
+            "headers": {
+                "WWW_Authenticate": {
+                    "type": "string"
+                }  
+            }
+        } 
+    },
+    "securityDefinitions": {
+        # X-API-Key: abcdef12345
+        "APIKeyHeader": {
+            "type": "apiKey",
+            "name": "X-API-Key",
+            "in": "header"
+        }
+    },
+    "definitions": {
+        
+        "ForkData": {
+            "type": "object",
+            "properties": {
+                "author_repo_url": {
+                    "type": "string"
+                },
+                "student_repo_url": {
+                    "type": "string"
+                }
+            },
+        },
+        "PullRequestData": {
+            "type": "object",
+            "properties": {
+                "student_repo_url": {
+                    "type": "string"
+                },
+                "command": {
+                    "type": "string"
+                }
+            },
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    }
+}
