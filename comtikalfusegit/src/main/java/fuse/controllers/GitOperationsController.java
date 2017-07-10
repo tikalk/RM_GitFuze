@@ -32,7 +32,7 @@ public class GitOperationsController {
 
             PullRequestService service = new PullRequestService();
             service.getClient().setCredentials("pnielab@gmail.com", "pnini007");
-            RepositoryId repo = RepositoryId.createFromUrl("https://github.com/tikalk/RM_GitFuze.git");
+            RepositoryId repo = RepositoryId.createFromUrl("https://github.com/tikalk/RM_GitFuze");
             PullRequest pullRequest = new PullRequest();
             pullRequest.setTitle("pull request");
 
