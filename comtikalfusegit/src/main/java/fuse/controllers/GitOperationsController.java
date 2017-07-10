@@ -35,7 +35,7 @@ public class GitOperationsController {
     @Autowired
     private Gson gson;
 
-    private String jenkinsApi = "http://jenkins/api/build";
+    private String jenkinsApi = "http://jenkins/api/build"; // TODO take from config
 
 
     @RequestMapping(value = "/pull-request", method = RequestMethod.POST)
@@ -59,9 +59,4 @@ public class GitOperationsController {
         return new ClientResponseDTO(JenkinsStatus.FAIL.name(), "unexpected error from jenkins server");
     }
 
-
-    public String getJenkinsUrl() {
-        String url = this.restTemplate.getForObject("http://jenkins/api/build", String.class);
-        return url;
-    }
 }
