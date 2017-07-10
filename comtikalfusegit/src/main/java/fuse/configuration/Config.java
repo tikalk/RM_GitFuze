@@ -1,5 +1,6 @@
 package fuse.configuration;
 
+import org.eclipse.egit.github.core.client.GitHubClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -10,10 +11,14 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class Config {
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
+/*    @Bean
+    public GitHubClient gitHubClient() {
+        return new GitHubClient();
+    }*/
+
+
+
+
 }
 
 
