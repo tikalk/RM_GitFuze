@@ -23,7 +23,6 @@ import javax.validation.constraints.NotNull;
  * Created by zeev on 7/10/17.
  */
 @RestController
-@RibbonClient(name = "ribbon-client", configuration = RibbonConfig.class)
 @RequestMapping("fusegit")
 public class GitOperationsController {
 
