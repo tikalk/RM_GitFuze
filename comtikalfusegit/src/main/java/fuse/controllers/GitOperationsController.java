@@ -46,6 +46,7 @@ public class GitOperationsController {
 
             PullRequest request = service.createPullRequest(repo, pullRequest);
             request = null;
+            int i = 0;
 
          /*
 
